@@ -1,0 +1,538 @@
+/* 1. Alles Alte (Zeile 1-40) löschen und durch dies ersetzen */
+body {
+  margin: 0;
+  background: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.08) 0px, transparent 50%),
+              #0f172a; 
+  background-attachment: fixed;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
+}
+
+/* 2. Fix für den Geister-Balken (verhindert das Anzeigen ohne Inhalt) */
+#compare-info:empty {
+    display: none !important;
+}
+
+/* 3. Skeleton-Höhen fixieren */
+.skeleton-chart { height: 350px; width: 100%; }
+.skeleton-rain { height: 130px; width: 100%; }
+
+/* 4. Logo-Interaktion */
+#logo-home-link:hover .logo-icon {
+    transform: rotate(15deg);
+    transition: transform 0.2s ease;
+}
+
+body.theme-sunny { background: radial-gradient(circle at top right, #2563eb, #0f172a); }
+body.theme-cloudy { background: radial-gradient(circle at top right, #475569, #0f172a); }
+body.theme-rainy { background: radial-gradient(circle at top right, #1e1b4b, #0f172a); }
+
+
+.app-shell {
+  max-width: 1600px !important; /* Nutzt fast den gesamten Desktop-Platz */
+  width: 100%; 
+  margin: 0 auto;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.75); /* Deep Blue mit Transparenz */
+  backdrop-filter: blur(12px); /* Frosted Glass Effekt */
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem 0;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* DEUTLICH GRÖSSERE SEARCH BAR */
+#search-root {
+  width: 100%;
+  max-width: 600px;
+}
+
+#search-root input {
+  width: 100%;
+  padding: 16px 24px;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  border: 2px solid #ffffff1a;
+  background: rgba(30, 41, 59, 0.7);
+  color: white;
+  outline: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+/* Styling für das Suchfeld, wenn man reinklickt */
+#search-root input:focus {
+  outline: none; /* Entfernt den Standard-Rahmen des Browsers */
+  border-color: #3b82f6; /* Dein Blau-Ton */
+  background: rgba(30, 41, 59, 0.9); /* Macht den Hintergrund etwas dunkler/klarer beim Tippen */
+  /* Ein sanfter Schatten nach außen (Glow-Effekt) */
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2); 
+  transition: all 0.2s ease; /* Macht den Übergang weich */
+}
+
+/* Glasmorphismus für alle Karten */
+aside, .main-content section {
+  background: rgba(30, 41, 59, 0.4) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid #ffffff1a;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  padding: 20px;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 320px; /* Sidebar bleibt kompakt, Main-Content dehnt sich aus */
+  gap: 30px; /* Mehr "Luft" zwischen den Elementen */
+  padding: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Favoriten Liste */
+#favorites-list { list-style: none; padding: 0; margin: 0; }
+.fav-item {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 10px; background: rgba(255,255,255,0.05);
+  padding: 12px; border-radius: 10px; transition: all 0.2s;
+}
+.fav-item:hover { background: rgba(255,255,255,0.1); transform: translateX(5px); }
+
+/* SKELETON ANIMATION */
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.05) 25%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.skeleton-title { height: 30px; width: 60%; margin-bottom: 20px; }
+.skeleton-temp { height: 70px; width: 40%; margin-bottom: 25px; }
+.skeleton-box { height: 80px; width: 100%; }
+
+/* Mobile Optimierung */
+@media (max-width: 850px) {
+  main { grid-template-columns: 1fr; }
+  aside { order: -1; margin-bottom: 10px; }
+}
+
+
+@media (max-width: 600px) {
+    header .container {
+        flex-direction: column !important;
+    }
+}
+
+
+/* Styling für den Standort-Button */
+.geo-location-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 2px solid #ffffff1a;
+  border-radius: 12px;
+  padding: 0 18px;
+  height: 56px; /* Gleiche Höhe wie das Input-Feld */
+  cursor: pointer;
+  font-size: 1.3rem;
+  color: white;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.geo-location-btn:hover {
+  background: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+  transform: scale(1.03);
+}
+
+.geo-location-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* LAYOUT */
+.info-grid {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+  gap: 12px; 
+  margin-top: 15px;
+}
+
+/* 5-TAGE VORHERSAGE */
+.forecast-row {
+  display: flex;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 15px;
+  border-radius: 12px;
+  gap: 10px;
+}
+
+.forecast-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.forecast-item .day { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
+.forecast-item .icon { font-size: 1.5rem; margin: 5px 0; }
+.forecast-item .temps { font-size: 0.8rem; font-weight: 700; }
+
+/* BUTTONS & WRAPPER */
+.fav-btn {
+  background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; border-radius: 50%; 
+  width: 50px; height: 50px; cursor: pointer; font-size: 1.5rem; color: #ef4444;
+}
+
+.secondary-btn {
+  width: 100%; margin-top: 20px; padding: 14px; border-radius: 12px; 
+  border: 1px solid rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1); 
+  color: #3b82f6; cursor: pointer; font-weight: 600;
+}
+
+/* ... restlicher Code ... */
+
+/* HISTORY CHIPS STYLING */
+.history-chip {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.history-chip:hover {
+    background: rgba(59, 130, 246, 0.3);
+    color: white;
+    border-color: #3b82f6;
+}
+
+/* Anpassung Grid für mehr Infos (6 Boxen) */
+.info-grid {
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* Boxen etwas kleiner, damit 6 passen */
+  gap: 10px; 
+  margin-top: 15px;
+}
+
+.info-box-styled {
+  background: rgba(255, 255, 255, 0.05); /* Das subtile Grau */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 12px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.info-box-styled:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Container für die Karte */
+/* Globale Karten-Definition */
+.weather-card {
+  background: rgba(30, 41, 59, 0.4) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Noch dünnerer, weicherer Rand */
+  border-radius: 24px; /* Modernere, rundere Ecken */
+  padding: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+/* Regen-Balken spezifisch */
+.rain-bar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 130px;
+    padding-top: 10px;
+}
+
+.rain-bar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.bar-bg {
+    width: 12px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.bar-fill {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, #3b82f6, #60a5fa);
+    border-radius: 4px;
+    animation: growUp 0.8s ease-out forwards;
+    transform-origin: bottom;
+}
+
+.bar-value-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #60a5fa;
+    margin-bottom: 4px;
+}
+
+.bar-time {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+@keyframes growUp {
+    from { transform: scaleY(0); }
+    to { transform: scaleY(1); }
+}
+
+/* Sidebar Fix */
+main {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  padding: 20px;
+  align-items: start;
+}
+
+@media (max-width: 850px) {
+  main { grid-template-columns: 1fr; }
+}
+
+/* Verhindert das "Springen" des Layouts */
+.main-content {
+    min-height: 100vh;
+}
+
+/* Falls das Chart-Canvas zu groß wird */
+#temp-chart {
+    width: 100% !important;
+    min-height: 350px;
+}
+
+/* Einheitliche Titel für alle Karten */
+.card-title {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* 1. Der gesamte Tooltip Hintergrund */
+.apexcharts-tooltip {
+    background: #1e293b !important; /* Dein App-Hintergrund-Blau */
+    border-color: #334155 !important; /* Hellerer Rand */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 2. Der Titel oben (Datum/Uhrzeit) */
+.apexcharts-tooltip-title {
+    background: #0f172a !important; /* Dunklerer Header */
+    border-bottom: 1px solid #334155 !important;
+    font-family: 'Inter', sans-serif !important;
+    
+    /* HIER: Die Farbe des Datums/Uhrzeit ändern */
+    color: #94a3b8 !important; 
+}
+
+/* 3. Der Text und die Werte (z.B. "Temperatur: 15°C") */
+.apexcharts-tooltip-text {
+    font-family: 'Inter', sans-serif !important;
+    
+    /* HIER: Die Farbe der Werte ändern */
+    color: #f1f5f9 !important; /* Fast Weiß */
+}
+
+/* Optional: Die kleinen Punkte (Marker) im Tooltip ausblenden, falls gewünscht */
+.apexcharts-tooltip-marker {
+    display: none;
+}
+
+.chart-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: rgba(96, 165, 250, 0.1);
+    color: #60a5fa;
+    border-color: #60a5fa;
+}
+
+/* Logo & Branding */
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-icon-wrapper {
+  position: relative;
+  font-size: 1.8rem;
+  background: rgba(255, 255, 255, 0.05);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, #60a5fa 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.status-text {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* Pulsierender Live-Punkt */
+.status-pulse {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  border: 2px solid #0f172a;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(0.9); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.7; }
+  100% { transform: scale(0.9); opacity: 1; }
+}
+
+/* Suchbereich Breite */
+.header-search-area {
+  flex-grow: 1;
+  max-width: 500px;
+}
+
+/* Responsive Optimierung */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .header-search-area {
+    width: 100%;
+  }
+}
+/* Ergänzung in main.css */
+.skeleton-chart {
+  height: 350px; /* Gleiche Höhe wie der spätere ApexChart */
+  width: 100%;
+  margin-top: 10px;
+}
+
+.skeleton-rain {
+  height: 130px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+#btn-cancel-compare:hover {
+  background: rgba(239, 68, 68, 0.3) !important;
+  transform: scale(1.05);
+  transition: all 0.2s ease;
+}
+
+#logo-home-link {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#logo-home-link:hover {
+  opacity: 0.8;
+  transform: translateY(-1px); /* Kleiner "Lift-Effekt" */
+}
+
+#logo-home-link:active {
+  transform: translateY(0);
+}
+
